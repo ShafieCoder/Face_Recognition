@@ -1,29 +1,26 @@
-Welcome! In this assignment, you're going to build a face recognition system. Many of the ideas presented here are from FaceNet. In the lecture, you also encountered DeepFace.
+ ## Face_Recognition
+ We're going to build a face recognition system. Many of the ideas presented here are from [FaceNet](https://arxiv.org/pdf/1503.03832.pdf). 
 
-Face recognition problems commonly fall into one of two categories:
+`Face recognition` problems commonly fall into one of two categories:
 
-Face Verification "Is this the claimed person?" For example, at some airports, you can pass through customs by letting a system scan your passport and then verifying that you (the person carrying the passport) are the correct person. A mobile phone that unlocks using your face is also using face verification. This is a 1:1 matching problem.
+**Face Verification** "Is this the claimed person?" For example, at some airports, you can pass through customs by letting a system scan your passport and then verifying that you (the person carrying the passport) are the correct person. A mobile phone that unlocks using your face is also using face verification. This is a 1:1 matching problem.
 
-Face Recognition "Who is this person?" For example, the video lecture showed a face recognition video of Baidu employees entering the office without needing to otherwise identify themselves. This is a 1:K matching problem.
+**Face Recognition** "Who is this person?" For example, when employees entering the office without needing their identity card to identify themselves. This is a 1:K matching problem.
 
-FaceNet learns a neural network that encodes a face image into a vector of 128 numbers. By comparing two such vectors, you can then determine if two pictures are of the same person.
+`FaceNet` learns a neural network that encodes a face image into a vector of 128 numbers. By comparing two such vectors, you can then determine if two pictures are of the same person.
 
-By the end of this assignment, you'll be able to:
+**Channels-last notation:
 
-Differentiate between face recognition and face verification
-Implement one-shot learning to solve a face recognition problem
-Apply the triplet loss function to learn a network's parameters in the context of face recognition
-Explain how to pose face recognition as a binary classification problem
-Map face images into 128-dimensional encodings using a pretrained model
-Perform face verification and face recognition with these encodings
-Channels-last notation
+Here we'll be using a pre-trained model which represents ConvNet activations using a "channels last" convention.
 
-For this assignment, you'll be using a pre-trained model which represents ConvNet activations using a "channels last" convention, as used during the lecture and in previous programming assignments.
+In other words, a batch of images will be of shape  <img src="https://render.githubusercontent.com/render/math?math=(𝑚,𝑛_𝐻,𝑛_𝑊,𝑛_𝐶)"> .
 
-In other words, a batch of images will be of shape  (𝑚,𝑛𝐻,𝑛𝑊,𝑛𝐶) .
-
- Naive Face Verification
+ ## 1- Naive Face Verification
 In Face Verification, you're given two images and you have to determine if they are of the same person. The simplest way to do this is to compare the two images pixel-by-pixel. If the distance between the raw images is below a chosen threshold, it may be the same person!
+
+<p align="center">
+  <img width="700" src="https://github.com/ShafieCoder/Image-Segmentation-with-U-Net/blob/main/images/encoder.png" alt="U-Net Encoder">
+</p>
 
 Of course, this algorithm performs poorly, since the pixel values change dramatically due to variations in lighting, orientation of the person's face, minor changes in head position, and so on.
 
