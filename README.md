@@ -25,14 +25,14 @@ In Face Verification, you're given two images and you have to determine if they 
 
 Of course, this algorithm performs poorly, since the pixel values change dramatically due to variations in lighting, orientation of the person's face, minor changes in head position, and so on.
 
-We'll see that rather than using the raw image, we can learn an encoding, <img src="https://render.githubusercontent.com/render/math?math=𝑓(𝑖𝑚𝑔)">.
+We'll see that rather than using the raw image, we can learn an encoding, <img src="https://render.githubusercontent.com/render/math?math=f(img)">.
 
 By using an encoding for each image, an element-wise comparison produces a more accurate judgement as to whether two pictures are of the same person.
 
 ## 2- Encoding Face Images into a 128-Dimensional Vector
 
 #### 2.1 - Using a ConvNet to Compute Encodings
-The FaceNet model takes a lot of data and a long time to train. So following the common practice in applied deep learning, we'll load weights that someone else has already trained. The network architecture follows the Inception model from [Szegedy et al.](https://arxiv.org/abs/1409.4842). Moreover, An Inception network implementation has been provided in the file [`inception_blocks_v2.py`]() to get a closer look at how it is implemented.
+The FaceNet model takes a lot of data and a long time to train. So following the common practice in applied deep learning, we'll load weights that someone else has already trained. The network architecture follows the Inception model from [Szegedy et al.](https://arxiv.org/abs/1409.4842). Moreover, An Inception network implementation has been provided in the file [`inception_blocks_v2.py`](https://github.com/ShafieCoder/Face_Recognition/blob/master/inception_blocks_v2.py) to get a closer look at how it is implemented.
 
 Hot tip: Go to "File->Open..." at the top of this notebook. This opens the file directory that contains the .py file).
 
