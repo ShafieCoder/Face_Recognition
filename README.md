@@ -70,90 +70,54 @@ We'd like to make sure that an image <img src="https://render.githubusercontent.
 
  of an individual is closer to the Positive <img src="https://render.githubusercontent.com/render/math?math=P(i)"> than to the Negative image <img src="https://render.githubusercontent.com/render/math?math=N(i)"> ) by at least a margin <img src="https://render.githubusercontent.com/render/math?math=\alpha"> :
  
- <img src="https://render.githubusercontent.com/render/math?math=\Vert f(A^{(i)})- f(P^{(i)})\Vert_{2}^{2} + \alpha < \Vert f(A^{(i)})- f(N^{(i)})\Vert_{2}^{2} ">
+ <img src="https://render.githubusercontent.com/render/math?math=\Vert f(A^{(i)})- f(P^{(i)})\Vert_{2}^{2} \dotplus  \alpha < \Vert f(A^{(i)})- f(N^{(i)})\Vert_{2}^{2} ">
  
 WE would thus like to minimize the following `"triplet cost"`:
 
-<img src="https://render.githubusercontent.com/render/math?math=\mathcal{J} = \sum_{i=1}^{m}\left[\underbrace{ \Vert f(A^{(i)}) -f(P^{(i)} ) \Vert_{2}^{2} }_{(1)} - 
-          \underbrace{ \Vert f(A^{(i)}) -f(N^{(i)}) \Vert_{2}^{2} }_{(2)} + \alpha \right]_{+}">
+<img src="https://render.githubusercontent.com/render/math?math=\mathcal{J}=\sum_{i=1}^{m}\left[\underbrace{\Vert f(A^{(i)})-f(P^{(i)} )\Vert_{2}^{2} }_{(1)}-\underbrace{ \Vert f(A^{(i)}) -f(N^{(i)}) \Vert_{2}^{2} }_{(2)} \dotplus \alpha \right]_{\dotplus}">
 
-Here, the notation " [𝑧]+ " is used to denote  𝑚𝑎𝑥(𝑧,0) .
+Here, the notation " <img src="https://render.githubusercontent.com/render/math?math=\left[z \right]_{\dotplus}"> " is used to denote  𝑚𝑎𝑥(𝑧,0).
 
-Notes:
+**Notes**:
 
-The term (1) is the squared distance between the anchor "A" and the positive "P" for a given triplet; you want this to be small.
-The term (2) is the squared distance between the anchor "A" and the negative "N" for a given triplet, you want this to be relatively large. It has a minus sign preceding it because minimizing the negative of the term is the same as maximizing that term.
-𝛼  is called the margin. It's a hyperparameter that you pick manually. You'll use  𝛼=0.2 .
-Most implementations also rescale the encoding vectors to haven L2 norm equal to one (i.e.,  ∣∣𝑓(𝑖𝑚𝑔)∣∣2 =1); you won't have to worry about that in this assignment.
-
-
-Exercise 1 - triplet_loss
-Implement the triplet loss as defined by formula (3). These are the 4 steps:
-
-Compute the distance between the encodings of "anchor" and "positive":  ∣∣𝑓(𝐴(𝑖))−𝑓(𝑃(𝑖))∣∣22 
-Compute the distance between the encodings of "anchor" and "negative":  ∣∣𝑓(𝐴(𝑖))−𝑓(𝑁(𝑖))∣∣22 
-Compute the formula per training example:  ∣∣𝑓(𝐴(𝑖))−𝑓(𝑃(𝑖))∣∣22−∣∣𝑓(𝐴(𝑖))−𝑓(𝑁(𝑖))∣∣22+𝛼 
-Compute the full formula by taking the max with zero and summing over the training examples:
-=∑𝑖=1𝑚[∣∣𝑓(𝐴(𝑖))−𝑓(𝑃(𝑖))∣∣22−∣∣𝑓(𝐴(𝑖))−𝑓(𝑁(𝑖))∣∣22+𝛼]+(3)
-Hints:
-
-Useful functions: tf.reduce_sum(), tf.square(), tf.subtract(), tf.add(), tf.maximum().
-
-For steps 1 and 2, sum over the entries of  ∣∣𝑓(𝐴(𝑖))−𝑓(𝑃(𝑖))∣∣22  and  ∣∣𝑓(𝐴(𝑖))−𝑓(𝑁(𝑖))∣∣22 .
-
-For step 4, you will sum over the training examples.
-
-Additional Hints:
-
-Recall that the square of the L2 norm is the sum of the squared differences:  ||𝑥−𝑦||22=∑𝑁𝑖=1(𝑥𝑖−𝑦𝑖)2 
-Note that the anchor, positive and negative encodings are of shape (m,128), where m is the number of training examples and 128 is the number of elements used to encode a single example.
-
-For steps 1 and 2, maintain the number of m training examples and sum along the 128 values of each encoding. tf.reduce_sum has an axis parameter. This chooses along which axis the sums are applied.
-
-Note that one way to choose the last axis in a tensor is to use negative indexing (axis=-1).
-
-In step 4, when summing over training examples, the result will be a single scalar value.
-
-For tf.reduce_sum to sum across all axes, keep the default value axis=None.
-
-4 - Loading the Pre-trained Model
-FaceNet is trained by minimizing the triplet loss. 
-But since training requires a lot of data and a lot of computation,
- you won't train it from scratch here. Instead, you'll load a previously trained
-model in the following cell. which might take a couple of minutes to run.
-
-5 - Applying the Model
-You're building a system for an office building where the building manager would like to offer facial recognition to allow the employees to enter the building.
-
-You'd like to build a face verification system that gives access to a list of people. To be admitted, each person has to swipe an identification card at the entrance. The face recognition system then verifies that they are who they claim to be.
+* The term (1) is the squared distance between the anchor "A" and the positive "P" for a given triplet; you want this to be small.
+* The term (2) is the squared distance between the anchor "A" and the negative "N" for a given triplet, you want this to be relatively large. It has a minus sign preceding it because minimizing the negative of the term is the same as maximizing that term.
+* 𝛼  is called the margin. It's a hyperparameter that you pick manually. You'll use  𝛼=0.2 .
+Most implementations also rescale the encoding vectors to haven L2 norm equal to one (i.e., <img src="https://render.githubusercontent.com/render/math?math=\Vert f(img) \Vert_{2} = 1">); 
 
 
-5.1 - Face Verification
-Now you'll build a database containing one encoding vector for each person who is allowed to enter the office. To generate the encoding, you'll use img_to_encoding(image_path, model), which runs the forward propagation of the model on the specified image.
+## 3 - Loading the Pre-trained Model
+FaceNet is trained by minimizing the triplet loss. But since training requires a lot of data and a lot of computation,
+ we won't train it from scratch here. Instead, we'll load a previously trained
+model in our code.
 
-Run the following code to build the database (represented as a Python dictionary). 
+## 4 - Applying the Model
+ We're building a system for an office building where the building manager would like to offer facial recognition to allow the employees to enter the building.
+
+We'd like to build a face verification system that gives access to a list of people. To be admitted, each person has to swipe an identification card at the entrance. The face recognition system then verifies that they are who they claim to be.
+
+#### 4.1 - Face Verification
+Now we'll build a database containing one encoding vector for each person who is allowed to enter the office. To generate the encoding, we'll use img_to_encoding(image_path, model), which runs the forward propagation of the model on the specified image.
+
 This database maps each person's name to a 128-dimensional encoding of their face.
 
-Now, when someone shows up at your front door and swipes their ID card (thus giving you their name), you can look up their encoding in the database, and use it to check if the person standing at the front door matches the name on the ID.
+When someone shows up at your front door and swipes their ID card (thus giving us their name), we can look up their encoding in the database, and use it to check if the person standing at the front door matches the name on the ID.
 
+To implement the verify() function, which checks if the front-door camera picture (image_path) is actually the person called "identity". We will have to go through the following steps:
 
-Exercise 2 - verify
-Implement the verify() function, which checks if the front-door camera picture (image_path) is actually the person called "identity". You will have to go through the following steps:
+* Compute the encoding of the image from image_path.
+* Compute the distance between this encoding and the encoding of the identity image stored in the database.
+* Open the door if the distance is less than 0.7, else do not open it.
 
-Compute the encoding of the image from image_path.
-Compute the distance between this encoding and the encoding of the identity image stored in the database.
-Open the door if the distance is less than 0.7, else do not open it.
-As presented above, you should use the L2 distance np.linalg.norm.
+**Note:** In this implementation, we should use the L2 distance np.linalg.norm and compare the L2 distance, not the square of the L2 distance, to the threshold 0.7.
 
-Note: In this implementation, compare the L2 distance, not the square of the L2 distance, to the threshold 0.7.
+*Hints*:
 
-Hints:
+* identity is a string that is also a key in the database dictionary.
+* img_to_encoding has two parameters: the image_path and model.
 
-identity is a string that is also a key in the database dictionary.
-img_to_encoding has two parameters: the image_path and model.
-
-5.2 - Face Recognition
-Your face verification system is mostly working. But since Kian got his ID card stolen, when he came back to the office the next day he couldn't get in!
+#### 4.2 - Face Recognition
+Our face verification system is mostly working. But since Kian got his ID card stolen, when he came back to the office the next day he couldn't get in!
 
 To solve this, you'd like to change your face verification system to a face recognition system. This way, no one has to carry an ID card anymore. An authorized person can just walk up to the building, and the door will unlock for them!
 
