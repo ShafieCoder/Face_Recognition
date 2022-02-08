@@ -13,26 +13,26 @@
 
 Here we'll be using a pre-trained model which represents ConvNet activations using a "channels last" convention.
 
-In other words, a batch of images will be of shape <img src="https://render.githubusercontent.com/render/math?math=(𝑚,𝑛_𝐻,𝑛_𝑊,𝑛_𝐶)"> .
+In other words, a batch of images will be of shape <img src="https://render.githubusercontent.com/render/math?math=(m,n_H,n_W,n_C)">.
 
  ## 1- Naive Face Verification
  
 In Face Verification, you're given two images and you have to determine if they are of the same person. The simplest way to do this is to compare the two images pixel-by-pixel. If the distance between the raw images is below a chosen threshold, it may be the same person!
 
 <p align="center">
-  <img width="700" src="https://github.com/ShafieCoder/Face_Recognition/blob/master/images/pixel_comparison.png" alt="face verification">
+  <img width="500" src="https://github.com/ShafieCoder/Face_Recognition/blob/master/images/pixel_comparison.png" alt="face verification">
 </p>
 
 Of course, this algorithm performs poorly, since the pixel values change dramatically due to variations in lighting, orientation of the person's face, minor changes in head position, and so on.
 
-You'll see that rather than using the raw image, you can learn an encoding,  𝑓(𝑖𝑚𝑔) .
+We'll see that rather than using the raw image, we can learn an encoding, <img src="https://render.githubusercontent.com/render/math?math=𝑓(𝑖𝑚𝑔)">.
 
 By using an encoding for each image, an element-wise comparison produces a more accurate judgement as to whether two pictures are of the same person.
 
-Encoding Face Images into a 128-Dimensional Vector
+## 2- Encoding Face Images into a 128-Dimensional Vector
 
-3.1 - Using a ConvNet to Compute Encodings
-The FaceNet model takes a lot of data and a long time to train. So following the common practice in applied deep learning, you'll load weights that someone else has already trained. The network architecture follows the Inception model from Szegedy et al.. An Inception network implementation has been provided for you, and you can find it in the file inception_blocks_v2.py to get a closer look at how it is implemented.
+#### 2.1 - Using a ConvNet to Compute Encodings
+The FaceNet model takes a lot of data and a long time to train. So following the common practice in applied deep learning, we'll load weights that someone else has already trained. The network architecture follows the Inception model from [Szegedy et al.](https://arxiv.org/abs/1409.4842). Moreover, An Inception network implementation has been provided in the file [`inception_blocks_v2.py`]() to get a closer look at how it is implemented.
 
 Hot tip: Go to "File->Open..." at the top of this notebook. This opens the file directory that contains the .py file).
 
