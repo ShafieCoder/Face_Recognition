@@ -34,16 +34,16 @@ By using an encoding for each image, an element-wise comparison produces a more 
 #### 2.1 - Using a ConvNet to Compute Encodings
 The FaceNet model takes a lot of data and a long time to train. So following the common practice in applied deep learning, we'll load weights that someone else has already trained. The network architecture follows the Inception model from [Szegedy et al.](https://arxiv.org/abs/1409.4842). Moreover, An Inception network implementation has been provided in the file [`inception_blocks_v2.py`](https://github.com/ShafieCoder/Face_Recognition/blob/master/inception_blocks_v2.py) to get a closer look at how it is implemented.
 
-Hot tip: Go to "File->Open..." at the top of this notebook. This opens the file directory that contains the .py file).
-
 The key things to be aware of are:
 
-This network uses 160x160 dimensional RGB images as its input. Specifically, a face image (or batch of  𝑚  face images) as a tensor of shape  (𝑚,𝑛𝐻,𝑛𝑊,𝑛𝐶)=(𝑚,160,160,3) 
-The input images are originally of shape 96x96, thus, you need to scale them to 160x160. This is done in the img_to_encoding() function.
-The output is a matrix of shape  (𝑚,128)  that encodes each input face image into a 128-dimensional vector
-Run the cell below to create the model for face images!
+* This network uses 160x160 dimensional RGB images as its input. Specifically, a face image (or batch of  𝑚  face images) as a tensor of shape  <img src="https://render.githubusercontent.com/render/math?math=(m,n_H,n_W,n_C) = (m,160,160,3)"> 
+* The input images are originally of shape 96x96, thus, you need to scale them to 160x160. This is done in the `img_to_encoding()` function.
+* The output is a matrix of shape  (𝑚,128)  that encodes each input face image into a 128-dimensional vector
 
-By using a 128-neuron fully connected layer as its last layer, the model ensures that the output is an encoding vector of size 128. You then use the encodings to compare two face images as follows:
+By using a 128-neuron fully connected layer as its last layer, the model ensures that the output is an encoding vector of size 128. We then use the encodings to compare two face images as follows:
+<p align="center">
+  <img width="500" src="https://github.com/ShafieCoder/Face_Recognition/blob/master/images/pixel_comparison.png" alt="face verification">
+</p>
 
 So, an encoding is a good one if:
 
