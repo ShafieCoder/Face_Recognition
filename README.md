@@ -13,13 +13,14 @@
 
 Here we'll be using a pre-trained model which represents ConvNet activations using a "channels last" convention.
 
-In other words, a batch of images will be of shape  <img src="https://render.githubusercontent.com/render/math?math=(𝑚,𝑛_𝐻,𝑛_𝑊,𝑛_𝐶)"> .
+In other words, a batch of images will be of shape <img src="https://render.githubusercontent.com/render/math?math=(𝑚,𝑛_𝐻,𝑛_𝑊,𝑛_𝐶)"> .
 
  ## 1- Naive Face Verification
+ 
 In Face Verification, you're given two images and you have to determine if they are of the same person. The simplest way to do this is to compare the two images pixel-by-pixel. If the distance between the raw images is below a chosen threshold, it may be the same person!
 
 <p align="center">
-  <img width="700" src="https://github.com/ShafieCoder/Image-Segmentation-with-U-Net/blob/main/images/encoder.png" alt="U-Net Encoder">
+  <img width="700" src="https://github.com/ShafieCoder/Face_Recognition/blob/master/images/pixel_comparison.png" alt="face verification">
 </p>
 
 Of course, this algorithm performs poorly, since the pixel values change dramatically due to variations in lighting, orientation of the person's face, minor changes in head position, and so on.
