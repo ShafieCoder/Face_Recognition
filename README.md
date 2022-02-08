@@ -101,7 +101,7 @@ Now we'll build a database containing one encoding vector for each person who is
 
 This database maps each person's name to a 128-dimensional encoding of their face.
 
-When someone shows up at your front door and swipes their ID card (thus giving us their name), we can look up their encoding in the database, and use it to check if the person standing at the front door matches the name on the ID.
+When someone shows up at our front door and swipes their ID card (thus giving us their name), we can look up their encoding in the database, and use it to check if the person standing at the front door matches the name on the ID.
 
 To implement the verify() function, which checks if the front-door camera picture (image_path) is actually the person called "identity". We will have to go through the following steps:
 
@@ -117,47 +117,44 @@ To implement the verify() function, which checks if the front-door camera pictur
 * img_to_encoding has two parameters: the image_path and model.
 
 #### 4.2 - Face Recognition
-Our face verification system is mostly working. But since Kian got his ID card stolen, when he came back to the office the next day he couldn't get in!
+Our face verification system is mostly working. But if someone in the office got his ID card stolen, when he come back to the office he couldn't get in!
 
-To solve this, you'd like to change your face verification system to a face recognition system. This way, no one has to carry an ID card anymore. An authorized person can just walk up to the building, and the door will unlock for them!
+To solve this, we'd like to change our face verification system to a face recognition system. This way, no one has to carry an ID card anymore. An authorized person can just walk up to the building, and the door will unlock for them!
 
-You'll implement a face recognition system that takes as input an image, and figures out if it is one of the authorized persons (and if so, who). Unlike the previous face verification system, you will no longer get a person's name as one of the inputs.
+We'll implement a face recognition system that takes as input an image, and figures out if it is one of the authorized persons (and if so, who). Unlike the previous face verification system, we will no longer get a person's name as one of the inputs.
 
+To implement the face recognition function `who_is_it()`, we should perform the following steps:
 
-Exercise 3 - who_is_it
-Implement who_is_it() with the following steps:
+* Compute the target encoding of the image from image_path
+* Find the encoding from the database that has smallest distance with the target encoding.
+* Initialize the min_dist variable to a large enough number (100). This helps us keep track of the closest encoding to the input's encoding.
+* Loop over the database dictionary's names and encodings. To loop use for (name, db_enc) in database.items().
+* Compute the L2 distance between the target "encoding" and the current "encoding" from the database. If this distance is less than the min_dist, then set min_dist to dist, and identity to name.
 
-Compute the target encoding of the image from image_path
-Find the encoding from the database that has smallest distance with the target encoding.
-Initialize the min_dist variable to a large enough number (100). This helps you keep track of the closest encoding to the input's encoding.
-Loop over the database dictionary's names and encodings. To loop use for (name, db_enc) in database.items().
-Compute the L2 distance between the target "encoding" and the current "encoding" from the database. If this distance is less than the min_dist, then set min_dist to dist, and identity to name.
+ **Ways to improve your facial recognition model:**
 
-Ways to improve your facial recognition model:
+Here are some ways to further improve the algorithm:
 
-Although you won't implement these here, here are some ways to further improve the algorithm:
+* Put more images of each person (under different lighting conditions, taken on different days, etc.) into the database. Then, given a new image, compare the new face to multiple pictures of the person. This would increase accuracy.
 
-Put more images of each person (under different lighting conditions, taken on different days, etc.) into the database. Then, given a new image, compare the new face to multiple pictures of the person. This would increase accuracy.
-
-Crop the images to contain just the face, and less of the "border" 
+* Crop the images to contain just the face, and less of the "border" 
 region around the face. This preprocessing removes some of the irrelevant pixels
  around the face, and also makes the algorithm more robust.
 
 
 
- 6 - References
+ ## 5- References
 1. Florian Schroff, Dmitry Kalenichenko, James Philbin (2015). 
-FaceNet: A Unified Embedding for Face Recognition and Clustering
+[FaceNet: A Unified Embedding for Face Recognition and Clustering](https://arxiv.org/pdf/1503.03832.pdf)
 
-2. Yaniv Taigman, Ming Yang, Marc'Aurelio Ranzato, Lior Wolf (2014). DeepFace
-: Closing the gap to human-level performance in face verification
+2. Yaniv Taigman, Ming Yang, Marc'Aurelio Ranzato, Lior Wolf (2014). [DeepFace: Closing the gap to human-level performance in face verification](https://research.fb.com/wp-content/uploads/2016/11/deepface-closing-the-gap-to-human-level-performance-in-face-verification.pdf)
 
 3. This implementation also took a lot of inspiration from the official FaceNet
- github repository: https://github.com/davidsandberg/facenet
+ github repository: [https://github.com/davidsandberg/facenet](https://github.com/davidsandberg/facenet)
 
 4. Further inspiration was found here: 
-https://machinelearningmastery.com/how-to-develop-a-face-recognition-system-using-facenet-in-keras-and-an-svm-classifier/
+[https://machinelearningmastery.com/how-to-develop-a-face-recognition-system-using-facenet-in-keras-and-an-svm-classifier/](https://machinelearningmastery.com/how-to-develop-a-face-recognition-system-using-facenet-in-keras-and-an-svm-classifier/)
 
-5. And here: https://github.com/nyoki-mtl/keras-facenet/blob/master/notebook/tf_to_keras.ipynb
+5. And here: [https://github.com/nyoki-mtl/keras-facenet/blob/master/notebook/tf_to_keras.ipynb](https://github.com/nyoki-mtl/keras-facenet/blob/master/notebook/tf_to_keras.ipynb)
 
 
