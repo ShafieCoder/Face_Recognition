@@ -40,36 +40,43 @@ The key things to be aware of are:
 * The input images are originally of shape 96x96, thus, you need to scale them to 160x160. This is done in the `img_to_encoding()` function.
 * The output is a matrix of shape  (𝑚,128)  that encodes each input face image into a 128-dimensional vector
 
-By using a 128-neuron fully connected layer as its last layer, the model ensures that the output is an encoding vector of size 128. We then use the encodings to compare two face images as follows:
-<p align="center">
-  <img width="500" src="https://github.com/ShafieCoder/Face_Recognition/blob/master/images/pixel_comparison.png" alt="face verification">
-</p>
+By using a 128-neuron fully connected layer as its last layer, the model ensures that the output is an encoding vector of size 128. We then use the encodings to compare two 
+face images. 
 
 So, an encoding is a good one if:
 
-The encodings of two images of the same person are quite similar to each other.
-The encodings of two images of different persons are very different.
+* The encodings of two images of the same person are quite similar to each other.
+* The encodings of two images of different persons are very different.
+
 The triplet loss function formalizes this, and tries to "push" the encodings of two images of the same person (Anchor and Positive) closer together, while "pulling" the encodings of two images of different persons (Anchor, Negative) further apart.
 
-The Triplet Loss
-Important Note: Since you're using a pretrained model, you won't actually need to implement the triplet loss function in this assignment. However, the triplet loss is the main ingredient of the face recognition algorithm, and you'll need to know how to use it for training your own FaceNet model, as well as other types of image similarity problems. Therefore, you'll implement it below, for fun and edification. :)
+#### 2.2- The Triplet Loss
 
 For an image  𝑥 , its encoding is denoted as  𝑓(𝑥) , where  𝑓  is the function computed by the neural network.
+images as follows:
+<p align="center">
+  <img width="500" src="https://github.com/ShafieCoder/Face_Recognition/blob/master/images/f_x.png" alt="encoding">
+</p>
 
 Training will use triplets of images  (𝐴,𝑃,𝑁) :
 
-A is an "Anchor" image--a picture of a person.
-P is a "Positive" image--a picture of the same person as the Anchor image.
-N is a "Negative" image--a picture of a different person than the Anchor image.
-These triplets are picked from the training dataset.  (𝐴(𝑖),𝑃(𝑖),𝑁(𝑖))  is used here to denote the  𝑖 -th training example.
-
-You'd like to make sure that an image  𝐴(𝑖)  of an individual is closer to the Positive  𝑃(𝑖)  than to the Negative image  𝑁(𝑖) ) by at least a margin  𝛼 :
-
-||𝑓(𝐴(𝑖))−𝑓(𝑃(𝑖))||22+𝛼<||𝑓(𝐴(𝑖))−𝑓(𝑁(𝑖))||22
+* A is an "Anchor" image--a picture of a person.
+* P is a "Positive" image--a picture of the same person as the Anchor image.
+* N is a "Negative" image--a picture of a different person than the Anchor image.
  
-You would thus like to minimize the following "triplet cost":
+These triplets are picked from the training dataset. <img src="https://render.githubusercontent.com/render/math?math=(A(i),P(i),N(i))"> is used here to denote the  𝑖 -th training example.
 
-=∑𝑖=1𝑚[∣∣𝑓(𝐴(𝑖))−𝑓(𝑃(𝑖))∣∣22(1)−∣∣𝑓(𝐴(𝑖))−𝑓(𝑁(𝑖))∣∣22(2)+𝛼]+(3)
+We'd like to make sure that an image <img src="https://render.githubusercontent.com/render/math?math=A(i)">
+
+ of an individual is closer to the Positive <img src="https://render.githubusercontent.com/render/math?math=P(i)"> than to the Negative image <img src="https://render.githubusercontent.com/render/math?math=N(i)"> ) by at least a margin <img src="https://render.githubusercontent.com/render/math?math=\alpha"> :
+ 
+ <img src="https://render.githubusercontent.com/render/math?math=\Vert f(A^{(i)})- f(P^{(i)})\Vert_{2}^{2} + \alpha < \Vert f(A^{(i)})- f(N^{(i)})\Vert_{2}^{2} ">
+ 
+WE would thus like to minimize the following `"triplet cost"`:
+
+<img src="https://render.githubusercontent.com/render/math?math=\mathcal{J} = \sum_{i=1}^{m}\left[\underbrace{ \Vert f(A^{(i)}) -f(P^{(i)} ) \Vert_{2}^{2} }_{(1)} - 
+          \underbrace{ \Vert f(A^{(i)}) -f(N^{(i)}) \Vert_{2}^{2} }_{(2)} + \alpha \right]_{+}">
+
 Here, the notation " [𝑧]+ " is used to denote  𝑚𝑎𝑥(𝑧,0) .
 
 Notes:
