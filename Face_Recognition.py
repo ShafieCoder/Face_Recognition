@@ -58,62 +58,38 @@ def triplet_loss(y_true, y_pred, alpha = 0.2):
     
     # Step 1: Compute the (encoding) distance between the anchor and the positive
     pos_dist = tf.reduce_sum(tf.square(tf.subtract(anchor, positive)), axis = -1)
+    
     # Step 2: Compute the (encoding) distance between the anchor and the negative
     neg_dist = tf.reduce_sum(tf.square(tf.subtract(anchor, negative)), axis = -1)
+    
     # Step 3: subtract the two previous distances and add alpha.
     basic_loss = tf.add(tf.subtract(pos_dist, neg_dist), alpha)
-    #print(basic_loss.shape)
+    
+   
     # Step 4: Take the maximum of basic_loss and 0.0. Sum over the training examples.
     loss = tf.reduce_sum(tf.maximum(basic_loss, tf.constant([0.0])), axis = None)
    
     
     return loss
 
-# BEGIN UNIT TEST
-tf.random.set_seed(1)
-y_true = (None, None, None) # It is not used
-y_pred = (tf.keras.backend.random_normal([3, 128], mean=6, stddev=0.1, seed = 1),
-          tf.keras.backend.random_normal([3, 128], mean=1, stddev=1, seed = 1),
-          tf.keras.backend.random_normal([3, 128], mean=3, stddev=4, seed = 1))
-loss = triplet_loss(y_true, y_pred)
-
-assert type(loss) == tf.python.framework.ops.EagerTensor, "Use tensorflow functions"
-print("loss = " + str(loss))
-
-y_pred_perfect = ([1., 1.], [1., 1.], [1., 1.,])
-loss = triplet_loss(y_true, y_pred_perfect, 5)
-assert loss == 5, "Wrong value. Did you add the alpha to basic_loss?"
-y_pred_perfect = ([1., 1.],[1., 1.], [0., 0.,])
-loss = triplet_loss(y_true, y_pred_perfect, 3)
-assert loss == 1., "Wrong value. Check that pos_dist = 0 and neg_dist = 2 in this example"
-y_pred_perfect = ([1., 1.],[0., 0.], [1., 1.,])
-loss = triplet_loss(y_true, y_pred_perfect, 0)
-assert loss == 2., "Wrong value. Check that pos_dist = 2 and neg_dist = 0 in this example"
-y_pred_perfect = ([0., 0.],[0., 0.], [0., 0.,])
-loss = triplet_loss(y_true, y_pred_perfect, -2)
-assert loss == 0, "Wrong value. Are you taking the maximum between basic_loss and 0?"
-y_pred_perfect = ([[1., 0.], [1., 0.]],[[1., 0.], [1., 0.]], [[0., 1.], [0., 1.]])
-loss = triplet_loss(y_true, y_pred_perfect, 3)
-assert loss == 2., "Wrong value. Are you applying tf.reduce_sum to get the loss?"
-y_pred_perfect = ([[1., 1.], [2., 0.]], [[0., 3.], [1., 1.]], [[1., 0.], [0., 1.,]])
-loss = triplet_loss(y_true, y_pred_perfect, 1)
-if (loss == 4.):
-    raise Exception('Perhaps you are not using axis=-1 in reduce_sum?')
-assert loss == 5, "Wrong value. Check your implementation"
-# END UNIT TEST
 
 #Loading the Pre-trained Model
+
 FRmodel = model
 
+"""
 #Run the following code to build the database (represented as a Python dictionary).
 #This database maps each person's name to a 128-dimensional encoding of their face.
 #tf.keras.backend.set_image_data_format('channels_last')
+"""
 def img_to_encoding(image_path, model):
     img = tf.keras.preprocessing.image.load_img(image_path, target_size=(160, 160))
     img = np.around(np.array(img) / 255.0, decimals=12)
     x_train = np.expand_dims(img, axis=0)
     embedding = model.predict_on_batch(x_train)
     return embedding / np.linalg.norm(embedding, ord=2)
+
+# creating our dataset taht contains image and name of some of employees
 
 database = {}
 database["danielle"] = img_to_encoding("images/danielle.png", FRmodel)
@@ -129,10 +105,11 @@ database["felix"] = img_to_encoding("images/felix.jpg", FRmodel)
 database["benoit"] = img_to_encoding("images/benoit.jpg", FRmodel)
 database["arnaud"] = img_to_encoding("images/arnaud.jpg", FRmodel)
 
-#Load the images of Danielle and Kian:
+#Load the images of Danielle and Kian, to see how each image look likes
 danielle = tf.keras.preprocessing.image.load_img("images/danielle.png", target_size=(160, 160))
 kian = tf.keras.preprocessing.image.load_img("images/kian.jpg", target_size=(160, 160))
 
+## in this step we can normalize the images and see how they are look likes
 np.around(np.array(kian) / 255.0, decimals=12).shape
 kian
 
@@ -140,8 +117,10 @@ np.around(np.array(danielle) / 255.0, decimals=12).shape
 danielle
 
 # verify function
-#Implement the verify() function, which checks if the
-#front-door camera picture (image_path) is actually the person called "identity".
+"""
+Implement the verify() function, which checks if the
+front-door camera picture (image_path) is actually the person called "identity".
+"""
 def verify(image_path, identity, database, model):
     """
     Function that verifies if the person on the "image_path" image is "identity".
@@ -156,8 +135,8 @@ def verify(image_path, identity, database, model):
         dist -- distance between the image_path and the image of "identity" in the database.
         door_open -- True, if the door should open. False otherwise.
     """
-    ### START CODE HERE
-    # Step 1: Compute the encoding for the image. Use img_to_encoding() see example above. (≈ 1 line)
+    
+    # Step 1: Compute the encoding for the image. Use img_to_encoding() see example above. 
     encoding = img_to_encoding(image_path, model)
     # Step 2: Compute distance with identity's image (≈ 1 line)
     dist = np.linalg.norm(tf.subtract(encoding,database[identity]),ord =2)
