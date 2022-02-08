@@ -1,3 +1,6 @@
+"""
+We implement face verification and face recognition system  
+"""
 # Go ahead and run the cell below to import the packages you'll need.
 
 from tensorflow.keras.models import Sequential
@@ -17,9 +20,10 @@ from numpy import genfromtxt
 import pandas as pd
 import tensorflow as tf
 import PIL
-
-#Run the cell below to create the model for face images!
 from tensorflow.keras.models import model_from_json
+
+#Run the cell below to create the model for face images! We use pre-trained model to reduce the computations
+
 
 json_file = open('keras-facenet-h5/model.json', 'r')
 loaded_model_json = json_file.read()
@@ -50,8 +54,8 @@ def triplet_loss(y_true, y_pred, alpha = 0.2):
     
     anchor, positive, negative = y_pred[0], y_pred[1], y_pred[2]
     
-    ### START CODE HERE
-    #(≈ 4 lines)
+    
+    
     # Step 1: Compute the (encoding) distance between the anchor and the positive
     pos_dist = tf.reduce_sum(tf.square(tf.subtract(anchor, positive)), axis = -1)
     # Step 2: Compute the (encoding) distance between the anchor and the negative
@@ -61,7 +65,7 @@ def triplet_loss(y_true, y_pred, alpha = 0.2):
     #print(basic_loss.shape)
     # Step 4: Take the maximum of basic_loss and 0.0. Sum over the training examples.
     loss = tf.reduce_sum(tf.maximum(basic_loss, tf.constant([0.0])), axis = None)
-    ### END CODE HERE
+   
     
     return loss
 
