@@ -9,7 +9,7 @@
 
 `FaceNet` learns a neural network that encodes a face image into a vector of 128 numbers. By comparing two such vectors, you can then determine if two pictures are of the same person.
 
-**Channels-last notation:
+**Channels-last notation:**
 
 Here we'll be using a pre-trained model which represents ConvNet activations using a "channels last" convention.
 
